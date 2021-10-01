@@ -128,13 +128,14 @@ def update_finished_attempts(content, timing_mode):
 	if 'segments' in splits:
 		data = []
 		i = 1
-		for segment in splits['segments']:
+		for name in splits['segments']:
+			segment = splits['segments'][name]
 			data.append(
 				{
 					'segment': str(i),
-					'name': segment['name'],
+					'name': name,
 					'duration': format_time(segment['best_time']['time_real']),
-					'finished': format_time(segment['split_times'][0]['time_real'])
+					'finished': format_time(segment['split_times']['Personal Best']['time_real'])
 				}
 			)
 			i += 1

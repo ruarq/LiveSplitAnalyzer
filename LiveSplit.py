@@ -51,20 +51,21 @@ def _parse_segment_time(segment_time: xml.Element) -> dict:
 
 def _parse_segment(segment: xml.Element) -> dict:
 	data = {}
-	data['name'] = segment.find('Name').text
+	name = segment.find('Name').text
+	data[name] = {}
 
 	# parse split times
-	data['split_times'] = []
+	data[name]['split_times'] = {}
 	for split_time in segment.find('SplitTimes'):
-		data['split_times'].append(_parse_split_time(split_time))
+		data[name]['split_times'].update(_parse_split_time(split_time))
 
-	data['best_time'] = _parse_time_element(segment.find('BestSegmentTime'))
-	data['segment_history'] = []
+	data[name]['best_time'] = _parse_time_element(segment.find('BestSegmentTime'))
+	data[name]['history'] = []
 	for segment_time in segment.find('SegmentHistory'):
-		data['segment_history'].append(_parse_segment_time(segment_time))
+		data[name]['history'].append(_parse_segment_time(segment_time))
 
 	# make sure the segment history is sorted. I noticed that Live split messes the order up occasionally
-	data['segment_history'].sort(key=lambda elem : elem['id'])
+	data[name]['history'].sort(key=lambda elem : elem['id'])
 
 	return data
 
@@ -72,8 +73,9 @@ def _parse_segment(segment: xml.Element) -> dict:
 
 def _parse_split_time(split_time: xml.Element) -> dict:
 	data = {}
-	data['name'] = split_time.get('name')
-	data.update(_parse_time_element(split_time))
+	name = split_time.get('name')
+	data[name] = {}
+	data[name].update(_parse_time_element(split_time))
 
 	return data
 
@@ -109,12 +111,15 @@ def from_str(string: str) -> dict:
 	attempts = root.find('AttemptHistory')
 	for attempt in attempts:
 		data['attempts'].append(_parse_attempt(attempt))
+	
+	# sort the attempts by id. LiveSplit messed up the order sometimes
+	data['attempts'].sort(key=lambda elem : elem['id'])
 
 	# parse all segments
-	data['segments'] = []
+	data['segments'] = {}
 	segments = root.find('Segments')
 	for segment in segments:
-		data['segments'].append(_parse_segment(segment))
+		data['segments'].update(_parse_segment(segment))
 
 	return data
 
