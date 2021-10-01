@@ -1,3 +1,5 @@
+from datetime import datetime
+from dash.dash_table.DataTable import DataTable
 from plotly.missing_ipywidgets import FigureWidget
 import LiveSplit as ls
 
@@ -6,6 +8,7 @@ import plotly.express as px
 
 # dash
 import dash
+from dash import dash_table
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
@@ -17,8 +20,8 @@ splits = {}
 
 #########################################################################################################
 
-def dash_split_table(splits: dict) -> dcc.Graph:
-	return None
+def format_time(time: datetime) -> str:
+	return time.strftime('%H:%M:%S')
 
 #########################################################################################################
 
@@ -73,23 +76,68 @@ app.layout = html.Div(
 			value='time_real',
 			id='timing-mode-dropdown'
 		),
-		dcc.Graph(id='finished-attempts', figure=fig_finished_attempts(splits, 'time_real'))
+		html.Div(
+			children=[
+				html.Div(
+					style={'display': 'inline-block'},
+					children=[
+						dcc.Graph(id='finished-attempts')
+					]
+				),
+				html.Div(
+					style={'display': 'inline-block'},
+					children=[
+						dash_table.DataTable(
+							id='splits-table',
+							columns=[
+								{'name': '#',			'id': 'segment'		},
+								{'name': 'Name',		'id': 'name'		},
+								{'name': 'Duration',	'id': 'duration'	},
+								{'name': 'Finished At',	'id': 'finished'	}
+							]
+						)
+					]
+				)
+			]
+		)
 	]
 )
 
 @app.callback(
 	Output('finished-attempts', 'figure'),
+	Output('splits-table', 'data'),
 	Input('upload-split-file', 'contents'),
 	Input('timing-mode-dropdown', 'value'))
 def update_finished_attempts(content, timing_mode):
+	global splits
+
+	# finished-attempts
 	if content is not None:
 		_, content_string = content.split(',')
-		global splits
 		splits = ls.from_str(base64.b64decode(content_string))
 
-	fig = fig_finished_attempts(splits, timing_mode)
+	if timing_mode is not None:
+		fig = fig_finished_attempts(splits, timing_mode)
+	
 	fig.update_layout(transition_duration=500)
-	return fig
+
+	# splits-table
+	data = None
+	if 'segments' in splits:
+		data = []
+		i = 1
+		for segment in splits['segments']:
+			data.append(
+				{
+					'segment': str(i),
+					'name': segment['name'],
+					'duration': format_time(segment['best_time']['time_real']),
+					'finished': format_time(segment['split_times'][0]['time_real'])
+				}
+			)
+			i += 1
+
+	return fig, data
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

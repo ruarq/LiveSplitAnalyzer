@@ -58,7 +58,7 @@ def _parse_segment(segment: xml.Element) -> dict:
 	for split_time in segment.find('SplitTimes'):
 		data['split_times'].append(_parse_split_time(split_time))
 
-	data['best_segment'] = _parse_time_element(segment.find('BestSegmentTime'))
+	data['best_time'] = _parse_time_element(segment.find('BestSegmentTime'))
 	data['segment_history'] = []
 	for segment_time in segment.find('SegmentHistory'):
 		data['segment_history'].append(_parse_segment_time(segment_time))
