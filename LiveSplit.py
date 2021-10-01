@@ -80,8 +80,8 @@ def _parse_split_time(split_time: xml.Element) -> dict:
 
 #########################################################################################################
 
-def from_file(filename: str) -> dict:
-	root = xml.parse(filename)
+def from_str(string: str) -> dict:
+	root = xml.fromstring(string)
 
 	data = {}
 	# read game and category name
@@ -121,5 +121,13 @@ def from_file(filename: str) -> dict:
 
 #########################################################################################################
 
+def from_file(filename: str) -> dict:
+	return from_str(open(filename, 'r').read())
+
+#########################################################################################################
+
 def finished_attempts(splits: dict, timing_mode: str) -> list:
-	return [attempt for attempt in splits['attempts'] if timing_mode in attempt]
+	if 'attempts' in splits:
+		return [attempt for attempt in splits['attempts'] if timing_mode in attempt]
+	else:
+		return []
