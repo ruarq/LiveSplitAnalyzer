@@ -52,7 +52,6 @@ def _parse_segment_time(segment_time: xml.Element) -> dict:
 def _parse_segment(segment: xml.Element) -> dict:
 	data = {}
 	data['name'] = segment.find('Name').text
-	data['icon'] = '????' # TODO(ruarq): figure out what icon is
 
 	# parse split times
 	data['split_times'] = []
