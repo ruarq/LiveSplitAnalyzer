@@ -134,8 +134,8 @@ def update_finished_attempts(content, timing_mode):
 				{
 					'segment': str(i),
 					'name': name,
-					'duration': format_time(segment['best_time']['time_real']),
-					'finished': format_time(segment['split_times']['Personal Best']['time_real'])
+					'duration': format_time(segment['best_time'][timing_mode]),
+					'finished': format_time(segment['split_times']['Personal Best'][timing_mode])
 				}
 			)
 			i += 1
