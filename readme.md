@@ -4,3 +4,6 @@ An analysis tool for split files which the program *LiveSplit* produces. It's an
 ## Dependencies
 `plotly` - install using `pip install plotly`
 `dash` - install using `pip install dash`
+
+## Running
+After you installed the dependencies, you should easily be able to run the Dash server by executing the [main.py](main.py) file: `python3 main.py`
