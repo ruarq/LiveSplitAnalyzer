@@ -77,16 +77,12 @@ app.layout = html.Div(
 			id='timing-mode-dropdown'
 		),
 		html.Div(
+			style={'display': 'flex'},
 			children=[
 				html.Div(
-					style={'display': 'inline-block'},
+					style={'width': '50%'},
 					children=[
-						dcc.Graph(id='finished-attempts')
-					]
-				),
-				html.Div(
-					style={'display': 'inline-block'},
-					children=[
+						'Segments',
 						dash_table.DataTable(
 							id='splits-table',
 							columns=[
@@ -96,6 +92,12 @@ app.layout = html.Div(
 								{'name': 'Finished At',	'id': 'finished'	}
 							]
 						)
+					]
+				),
+				html.Div(
+					style={'width': '50%'},
+					children=[
+						dcc.Graph(id='finished-attempts')
 					]
 				)
 			]
