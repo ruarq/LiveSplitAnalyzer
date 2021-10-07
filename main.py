@@ -51,15 +51,17 @@ app.layout = html.Div(
 		'font-family': 'Arial'
 	},
 	children=[
-		html.H1(children='LiveSplit Analyzer',
+		html.H1(
+			children='LiveSplit Analyzer',
 			style={
 				'textAlign': 'center'
 			}
 		),
-		dcc.Upload(id='upload-split-file',
+		dcc.Upload(
+			id='upload-split-file',
 			children=html.Div([
 				'Drag and Drop or ',
-				html.A('Select Files')
+				html.A('Select a File')
 			]),
 			style={
 				'height': '60px',
