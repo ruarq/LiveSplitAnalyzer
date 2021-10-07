@@ -42,11 +42,14 @@ def fig_finished_attempts(splits: dict, timing_mode: str) -> FigureWidget:
 #########################################################################################################
 
 # create the figure
-splits = {}
+splits = ls.from_file('calturin.lss')
 
 # create the app
 app = dash.Dash('LiveSplit Analyzer')
 app.layout = html.Div(
+	style={
+		'font-family': 'Arial'
+	},
 	children=[
 		html.H1(children='LiveSplit Analyzer',
 			style={
@@ -80,9 +83,11 @@ app.layout = html.Div(
 			style={'display': 'flex'},
 			children=[
 				html.Div(
-					style={'width': '50%'},
+					style={
+						'width': '50%'
+					},
 					children=[
-						'Segments',
+						html.H4('Segments'),
 						dash_table.DataTable(
 							id='splits-table',
 							columns=[
@@ -95,7 +100,9 @@ app.layout = html.Div(
 					]
 				),
 				html.Div(
-					style={'width': '50%'},
+					style={
+						'width': '50%'
+					},
 					children=[
 						dcc.Graph(id='finished-attempts')
 					]
